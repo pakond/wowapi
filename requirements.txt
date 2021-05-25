@@ -1,0 +1,10 @@
+django
+psycopg2
+requests
+jsonfield
+djangorestframework
+djangorestframework-api-key==2.*
+django-cors-headers
+django-background-tasks
+django-filter
+pillow
