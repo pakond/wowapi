@@ -18,9 +18,9 @@ from django.views.decorators.cache import cache_page
 from rest_framework.pagination import PageNumberPagination
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 50
+    page_size = 100
     page_size_query_param = 'page_size'
-    max_page_size = 500
+    max_page_size = 1000
 
 # Create your views here.
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
@@ -345,7 +345,7 @@ class CharacterViewSet(viewsets.ModelViewSet):
             if datetime.timestamp(character_exists.last_update) > datetime.timestamp(datetime.now()) - 50:
                 return Response(data={'detail': 'Character exists on database and last update date is to short'}, status=status.HTTP_400_BAD_REQUEST)
             res = wowpvp.update_character(character_exists)
-            if res == 2 or res == 1:
+            if res == False:
                 return Response(data={'detail': 'Update Failed ' + name + '-' + region.name + '-' + realm.slug}, status=status.HTTP_400_BAD_REQUEST) 
             return Response(data={'detail': 'Updated character ' + name + '-' + region.name + '-' + realm.slug})
         res = wowpvp.get_character(name, region, realm)
@@ -361,7 +361,8 @@ class PvpEntryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PvpEntry.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['character__name', 'time']
-    filterset_fields = ['rank', 'rating', 'bracket', 'season', 'region']
+    filterset_fields = ['rank', 'rating', 'bracket__pvp_type', 'season__sid', 'region__name', 'character__wow_class__name',
+    'character__faction__name', 'character__realm__slug']
     pagination_class = StandardResultsSetPagination
 
     @method_decorator(cache_page(60*60*1))
@@ -372,22 +373,6 @@ class PvpEntryViewSet(viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return serializers.PvpEntryDetailSerializer
         return serializers.PvpEntrySerializer
-
-# class PvpLeaderboardViewSet(viewsets.ReadOnlyModelViewSet):
-#     serializer_class = serializers.PvpLeaderboardSerializer
-#     permission_classes = [HasAPIKey]
-#     queryset = PvpLeaderboard.objects.all()
-#     filter_backends = [DjangoFilterBackend]
-#     filterset_fields = ['bracket', 'region', 'season']
-
-#     @method_decorator(cache_page(60*60*2))
-#     def dispatch(self, request, *args, **kwargs):
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def get_serializer_class(self):
-#         if self.action == 'retrieve':
-#             return serializers.PvpLeaderboardDetailSerializer
-#         return serializers.PvpLeaderboardSerializer
 
 class PvpSeasonViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpSeasonSerializer

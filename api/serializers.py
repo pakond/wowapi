@@ -310,24 +310,3 @@ class PvpEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = PvpEntry
         fields = ['rank', 'rating', 'bracket', 'season', 'region', 'character', 'won', 'lost', 'played', 'winratio', 'time']
-
-# class PvpLeaderboardSerializer(serializers.ModelSerializer):
-
-#     bracket = serializers.ReadOnlyField(source='bracket.pvp_type')
-#     season = serializers.ReadOnlyField(source='season.sid')
-#     region = serializers.ReadOnlyField(source='region.name')
-
-#     class Meta:
-#         model = PvpLeaderboard
-#         fields = ['id', 'bracket', 'season', 'region']
-
-# class PvpLeaderboardDetailSerializer(serializers.ModelSerializer):
-
-#     bracket = PvpBracketSerializer(read_only=True)
-#     region = RegionSerializer(read_only=True)
-#     season = PvpSeasonSerializer(read_only=True)
-#     entries = PvpEntrySerializer(read_only=True, many=True)
-
-#     class Meta:
-#         model = PvpLeaderboard
-#         fields = ['id', 'bracket', 'season', 'region', 'entries']

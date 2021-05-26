@@ -264,29 +264,19 @@ class Character(models.Model):
         return self.name + '-' + self.realm.name
 
 class PvpEntry(models.Model):
-    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=True)
-    bracket = models.ForeignKey(PvpBracket, on_delete=models.CASCADE, null=True)
-    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=True)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True)
-    rank = models.IntegerField(null=True)
-    rating = models.IntegerField(null=True)
-    won = models.IntegerField(null=True)
-    lost = models.IntegerField(null=True)
-    played = models.IntegerField(null=True)
-    winratio = models.IntegerField(null=True)
-    time = models.DateTimeField(null=True, default=timezone.now)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
+    bracket = models.ForeignKey(PvpBracket, on_delete=models.CASCADE, null=False)
+    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
+    rank = models.IntegerField(null=False)
+    rating = models.IntegerField(null=False)
+    won = models.IntegerField(null=False)
+    lost = models.IntegerField(null=False)
+    played = models.IntegerField(null=False)
+    winratio = models.IntegerField(null=False)
+    time = models.DateTimeField(null=False, default=timezone.now)
 
     def __str__(self):
         return self.character.name + ' ' + str(self.rating)
-
-# class PvpLeaderboard(models.Model):
-#     region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
-#     bracket = models.ForeignKey(PvpBracket, on_delete=models.CASCADE, null=False)
-#     season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=True)
-#     entries = models.ManyToManyField(PvpEntry, default=None, blank=True)
-
-#     def __str__(self):
-#         return 'season: ' + str(self.season.sid) + ' ' + self.bracket.pvp_type + ' ' + self.region.name
-
 
 
