@@ -22,7 +22,9 @@ router.register(r'conduit', views.ConduitViewSet, basename="conduit")
 router.register(r'pvp-season-reward', views.PvpSeasonRewardViewSet, basename="pvp-season-reward")
 router.register(r'pvp-bracket', views.PvpBracketViewSet, basename="pvp-bracket")
 router.register(r'character', views.CharacterViewSet, basename="character")
-router.register(r'pvp-entry', views.PvpEntryViewSet, basename="pvp-entry")
+router.register(r'pvp-entry-2v2', views.PvpEntry2v2ViewSet, basename="pvp-entry-2v2")
+router.register(r'pvp-entry-3v3', views.PvpEntry3v3ViewSet, basename="pvp-entry-3v3")
+router.register(r'pvp-entry-rbg', views.PvpEntryRbgViewSet, basename="pvp-entry-rbg")
 router.register(r'pvp-season', views.PvpSeasonViewSet, basename="pvp-season")
 
 urlpatterns = [

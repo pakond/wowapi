@@ -1,5 +1,5 @@
-from .models import PvpSeason, PvpSeasonReward, PvpEntry, PvpBracket, PvpBracketStatistics, Realm, Region, Race, Faction, WowClass, Spec, Language, Talent
-from .models import PvpTalent, Covenant, Soulbind, SoulbindTrait, Conduit, Achievement, Character, CharacterConduit, CharacterAchievement
+from .models import PvpSeason, PvpSeasonReward, PvpEntry2v2, PvpBracket, PvpBracketStatistics, Realm, Region, Race, Faction, WowClass, Spec, Language, Talent
+from .models import PvpEntry3v3, PvpEntryRbg, PvpTalent, Covenant, Soulbind, SoulbindTrait, Conduit, Achievement, Character, CharacterConduit, CharacterAchievement
 import requests, os
 from requests.auth import HTTPBasicAuth
 from datetime import datetime
@@ -756,31 +756,46 @@ def update_pvp_seasons():
                                             season_reward.save()
                                             season.rewards.add(season_reward)
 
-@background(schedule=3600)
+
+#@background(schedule=400)
 def get_entries():
+
+    print('ejecutando get_entries ' + str(timezone.now()))
 
     regions = Region.objects.all()
     season = PvpSeason.objects.get(is_active=True)
-    brackets = PvpBracket.objects.all()
 
     for region in regions:
-        for bracket in brackets:
-            safebracket = bracket.pvp_type
-            safebracket = safebracket.replace('ARENA_', '')
-            safebracket = safebracket.replace('BATTLEGROUNDS', 'rbg')
-            query = { 'region': region.name, 'namespace': 'dynamic-' + region.name, 'locale': 'en_GB' }
-            response = make_request('https://' + region.name + '.api.blizzard.com/data/wow/pvp-season/' + str(season.sid) + '/pvp-leaderboard/' + safebracket, query)
-            if response.status_code == 200:
-                response = response.json()
-                data = response['entries']
+        new_entries2v2 = []
+        query = { 'region': region.name, 'namespace': 'dynamic-' + region.name, 'locale': 'en_GB' }
+        response = make_request('https://' + region.name + '.api.blizzard.com/data/wow/pvp-season/' + str(season.sid) + '/pvp-leaderboard/2v2', query)
+        if response.status_code == 200:
+            response = response.json()
+            data = response['entries']
 
-                for item in data:
+            for item in data:
+                character = Character.objects.filter(cid=item['character']['id'])
+                if character:
+                    character = Character.objects.get(cid=item['character']['id'])
+                    pvp_entry = PvpEntry2v2(
+                        character = character,
+                        season=season,
+                        region=region,
+                        rank = item['rank'],
+                        rating = item['rating'],
+                        won = item['season_match_statistics']['won'],
+                        lost = item['season_match_statistics']['lost'],
+                        played = item['season_match_statistics']['played'],
+                        winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
+                    )
+                    new_entries2v2.append(pvp_entry)
+                else:
+                    get_character(str.lower(item['character']['name']), region, Realm.objects.get(rid=item['character']['realm']['id']))
                     character = Character.objects.filter(cid=item['character']['id'])
                     if character:
                         character = Character.objects.get(cid=item['character']['id'])
-                        pvp_entry = PvpEntry(
+                        pvp_entry = PvpEntry2v2(
                             character = character,
-                            bracket = bracket,
                             season=season,
                             region=region,
                             rank = item['rank'],
@@ -790,27 +805,104 @@ def get_entries():
                             played = item['season_match_statistics']['played'],
                             winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
                         )
-                        pvp_entry.save()
+                        new_entries2v2.append(pvp_entry)
                     else:
-                        get_character(str.lower(item['character']['name']), region, Realm.objects.get(rid=item['character']['realm']['id']))
-                        character = Character.objects.filter(cid=item['character']['id'])
-                        if character:
-                            character = Character.objects.get(cid=item['character']['id'])
-                            pvp_entry = PvpEntry(
-                                character = character,
-                                bracket = bracket,
-                                season=season,
-                                region=region,
-                                rank = item['rank'],
-                                rating = item['rating'],
-                                won = item['season_match_statistics']['won'],
-                                lost = item['season_match_statistics']['lost'],
-                                played = item['season_match_statistics']['played'],
-                                winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
-                            )
-                            pvp_entry.save()
-                        else:
-                            continue
+                        continue
+        PvpEntry2v2.objects.all().delete()
+        PvpEntry2v2.objects.bulk_create(new_entries2v2)
+
+        new_entries3v3 = []
+        query = { 'region': region.name, 'namespace': 'dynamic-' + region.name, 'locale': 'en_GB' }
+        response = make_request('https://' + region.name + '.api.blizzard.com/data/wow/pvp-season/' + str(season.sid) + '/pvp-leaderboard/3v3', query)
+        if response.status_code == 200:
+            response = response.json()
+            data = response['entries']
+
+            for item in data:
+                character = Character.objects.filter(cid=item['character']['id'])
+                if character:
+                    character = Character.objects.get(cid=item['character']['id'])
+                    pvp_entry = PvpEntry3v3(
+                        character = character,
+                        season=season,
+                        region=region,
+                        rank = item['rank'],
+                        rating = item['rating'],
+                        won = item['season_match_statistics']['won'],
+                        lost = item['season_match_statistics']['lost'],
+                        played = item['season_match_statistics']['played'],
+                        winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
+                    )
+                    new_entries3v3.append(pvp_entry)
+                else:
+                    get_character(str.lower(item['character']['name']), region, Realm.objects.get(rid=item['character']['realm']['id']))
+                    character = Character.objects.filter(cid=item['character']['id'])
+                    if character:
+                        character = Character.objects.get(cid=item['character']['id'])
+                        pvp_entry = PvpEntry3v3(
+                            character = character,
+                            season=season,
+                            region=region,
+                            rank = item['rank'],
+                            rating = item['rating'],
+                            won = item['season_match_statistics']['won'],
+                            lost = item['season_match_statistics']['lost'],
+                            played = item['season_match_statistics']['played'],
+                            winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
+                        )
+                        new_entries3v3.append(pvp_entry)
+                    else:
+                        continue
+        PvpEntry3v3.objects.all().delete()
+        PvpEntry3v3.objects.bulk_create(new_entries3v3)
+
+        new_entriesRbg = []
+        query = { 'region': region.name, 'namespace': 'dynamic-' + region.name, 'locale': 'en_GB' }
+        response = make_request('https://' + region.name + '.api.blizzard.com/data/wow/pvp-season/' + str(season.sid) + '/pvp-leaderboard/rbg', query)
+        if response.status_code == 200:
+            response = response.json()
+            data = response['entries']
+
+            for item in data:
+                character = Character.objects.filter(cid=item['character']['id'])
+                if character:
+                    character = Character.objects.get(cid=item['character']['id'])
+                    pvp_entry = PvpEntryRbg(
+                        character = character,
+                        season=season,
+                        region=region,
+                        rank = item['rank'],
+                        rating = item['rating'],
+                        won = item['season_match_statistics']['won'],
+                        lost = item['season_match_statistics']['lost'],
+                        played = item['season_match_statistics']['played'],
+                        winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
+                    )
+                    new_entriesRbg.append(pvp_entry)
+                else:
+                    get_character(str.lower(item['character']['name']), region, Realm.objects.get(rid=item['character']['realm']['id']))
+                    character = Character.objects.filter(cid=item['character']['id'])
+                    if character:
+                        character = Character.objects.get(cid=item['character']['id'])
+                        pvp_entry = PvpEntryRbg(
+                            character = character,
+                            season=season,
+                            region=region,
+                            rank = item['rank'],
+                            rating = item['rating'],
+                            won = item['season_match_statistics']['won'],
+                            lost = item['season_match_statistics']['lost'],
+                            played = item['season_match_statistics']['played'],
+                            winratio = (item['season_match_statistics']['won'] * 100) / item['season_match_statistics']['played']
+                        )
+                        new_entriesRbg.append(pvp_entry)
+                    else:
+                        continue
+        PvpEntryRbg.objects.all().delete()
+        PvpEntryRbg.objects.bulk_create(new_entriesRbg)
+
+    print('finalizando get_entries ' + str(timezone.now()))
+
 
 def get_character(name, region, realm):
 
@@ -1185,7 +1277,6 @@ def get_alters(character):
         ).exclude(id=character.id)
 
         for char in characters:
-            print("Adding alter: " + character.name + " of " + char.name)
             character.alters.add(char)
             char.alters.add(character)
 
@@ -1196,6 +1287,5 @@ def get_alters(character):
         ).exclude(id=character.id)
 
         for char in characters:
-            print("Adding alter: " + character.name + " of " + char.name)
             character.alters.add(char)
             char.alters.add(character)

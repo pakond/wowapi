@@ -263,9 +263,8 @@ class Character(models.Model):
     def __str__(self):
         return self.name + '-' + self.realm.name
 
-class PvpEntry(models.Model):
+class PvpEntry2v2(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
-    bracket = models.ForeignKey(PvpBracket, on_delete=models.CASCADE, null=False)
     season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
     rank = models.IntegerField(null=False)
@@ -279,4 +278,33 @@ class PvpEntry(models.Model):
     def __str__(self):
         return self.character.name + ' ' + str(self.rating)
 
+class PvpEntry3v3(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
+    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
+    rank = models.IntegerField(null=False)
+    rating = models.IntegerField(null=False)
+    won = models.IntegerField(null=False)
+    lost = models.IntegerField(null=False)
+    played = models.IntegerField(null=False)
+    winratio = models.IntegerField(null=False)
+    time = models.DateTimeField(null=False, default=timezone.now)
+
+    def __str__(self):
+        return self.character.name + ' ' + str(self.rating)
+
+class PvpEntryRbg(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
+    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
+    rank = models.IntegerField(null=False)
+    rating = models.IntegerField(null=False)
+    won = models.IntegerField(null=False)
+    lost = models.IntegerField(null=False)
+    played = models.IntegerField(null=False)
+    winratio = models.IntegerField(null=False)
+    time = models.DateTimeField(null=False, default=timezone.now)
+
+    def __str__(self):
+        return self.character.name + ' ' + str(self.rating)
 

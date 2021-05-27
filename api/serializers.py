@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from api.models import Achievement, CharacterAchievement, CharacterConduit, PvpSeason, PvpSeasonReward, PvpEntry, PvpBracket, PvpBracketStatistics, Language
-from api.models import Region, Realm, Faction, Race, WowClass, Spec, Talent, PvpTalent, Covenant, Soulbind, SoulbindTrait, Conduit, Character
+from api.models import Achievement, CharacterAchievement, CharacterConduit, PvpSeason, PvpSeasonReward, PvpBracket, PvpBracketStatistics, Language
+from api.models import PvpEntry2v2, PvpEntry3v3, PvpEntryRbg, Region, Realm, Faction, Race, WowClass, Spec, Talent, PvpTalent, Covenant, Soulbind, SoulbindTrait, Conduit, Character
 from django.conf import settings
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -291,24 +291,33 @@ class CharacterDetailSerializer(serializers.ModelSerializer):
         'covenant', 'covenant_rank', 'soulbind', 'soulbind_abilities', 'conduits', 'item_level', 'media', 'avatar', 'achievement_points', 'gender', 
         'achievements', 'ratings', 'max_2v2_rating', 'max_3v3_rating', 'max_rbg_rating', 'alters', 'last_update', 'last_search', 'checked', 'level']
 
-class PvpEntryDetailSerializer(serializers.ModelSerializer):
+
+class PvpEntry2v2Serializer(serializers.ModelSerializer):
 
     character = CharacterSerializer(read_only=True)
-    bracket = PvpBracketSerializer(read_only=True)
     season = PvpSeasonSerializer(read_only=True)
     region = RegionSerializer(read_only=True)
 
     class Meta:
-        model = PvpEntry
-        fields = ['rank', 'rating', 'bracket', 'season', 'region', 'character', 'won', 'lost', 'played', 'winratio', 'time']
+        model = PvpEntry2v2
+        fields = ['rank', 'rating', 'season', 'region', 'character', 'won', 'lost', 'played', 'winratio', 'time']
 
-class PvpEntrySerializer(serializers.ModelSerializer):
+class PvpEntry3v3Serializer(serializers.ModelSerializer):
 
     character = CharacterSerializer(read_only=True)
-    bracket = PvpBracketSerializer(read_only=True)
     season = PvpSeasonSerializer(read_only=True)
     region = RegionSerializer(read_only=True)
 
     class Meta:
-        model = PvpEntry
-        fields = ['rank', 'rating', 'bracket', 'season', 'region', 'character', 'won', 'lost', 'played', 'winratio', 'time']
+        model = PvpEntry3v3
+        fields = ['rank', 'rating', 'season', 'region', 'character', 'won', 'lost', 'played', 'winratio', 'time']
+
+class PvpEntryRbgSerializer(serializers.ModelSerializer):
+
+    character = CharacterSerializer(read_only=True)
+    season = PvpSeasonSerializer(read_only=True)
+    region = RegionSerializer(read_only=True)
+
+    class Meta:
+        model = PvpEntryRbg
+        fields = ['rank', 'rating', 'season', 'region', 'character', 'won', 'lost', 'played', 'winratio', 'time']

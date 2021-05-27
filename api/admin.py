@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PvpSeason, PvpSeasonReward, PvpEntry, PvpBracket, Language, Faction, Region, Realm, Race, WowClass, Spec, Talent, PvpTalent, Covenant, Soulbind, SoulbindTrait, Conduit, CharacterConduit, PvpBracketStatistics, Character, Achievement, CharacterAchievement
+from .models import PvpSeason, PvpSeasonReward, PvpBracket, Language, Faction, Region, Realm, Race, WowClass, Spec, Talent, PvpTalent, Covenant, Soulbind, SoulbindTrait, Conduit, CharacterConduit, PvpBracketStatistics, Character, Achievement, CharacterAchievement
 # Register your models here.
 
 class CustomLanguage(admin.ModelAdmin):
@@ -99,20 +99,11 @@ class CustomCharacter(admin.ModelAdmin):
     list_filter = ('name', 'region', 'realm', 'faction', 'race', 'spec', 'covenant', 'covenant_rank', 
     'soulbind', 'item_level', 'achievement_points', 'last_update', 'last_search', 'checked',)
 
-class CustomPvpEntry(admin.ModelAdmin):
-    model = PvpEntry
-    list_display = ('character', 'rank', 'rating', 'time')
-    list_filter = ('character', 'rank', 'rating', 'time')
 
 class CustomPvpSeasonReward(admin.ModelAdmin):
     model = PvpSeasonReward
     list_display = ('achievement', 'bracket', 'faction', 'region', 'cutoff',)
     list_filter = ('achievement', 'bracket', 'faction', 'region', 'cutoff',)
-
-# class CustomPvpLeaderboard(admin.ModelAdmin):
-#     model = PvpLeaderboard
-#     list_display = ('region', 'bracket', 'season',)
-#     list_filter = ('region', 'bracket', 'season',)
 
 class CustomPvpSeason(admin.ModelAdmin):
     model = PvpSeason
@@ -139,6 +130,4 @@ admin.site.register(PvpBracketStatistics, CustomPvpBracketStatistics)
 admin.site.register(Character, CustomCharacter)
 admin.site.register(PvpBracket, CustomPvpBracket)
 admin.site.register(PvpSeasonReward, CustomPvpSeasonReward)
-admin.site.register(PvpEntry, CustomPvpEntry)
-#admin.site.register(PvpLeaderboard, CustomPvpLeaderboard)
 admin.site.register(PvpSeason, CustomPvpSeason)
