@@ -260,10 +260,12 @@ class CharacterSerializer(serializers.ModelSerializer):
     realm = serializers.ReadOnlyField(source='realm.slug')
     wow_class = serializers.ReadOnlyField(source='wow_class.name')
     faction = serializers.ReadOnlyField(source='faction.name')
+    spec = serializers.ReadOnlyField(source='spec.name')
+    race = serializers.ReadOnlyField(source='race.name')
 
     class Meta:
         model = Character
-        fields = ['name', 'realm', 'region', 'faction', 'wow_class', 'max_3v3_rating', 'max_2v2_rating']
+        fields = ['name', 'realm', 'region', 'faction', 'wow_class', 'guild', 'spec', 'race', 'gender', 'max_3v3_rating', 'max_2v2_rating']
 
 class CharacterDetailSerializer(serializers.ModelSerializer):
 

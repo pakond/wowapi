@@ -6,6 +6,7 @@ from datetime import datetime
 import time
 from django.utils.timezone import make_aware
 from django.utils import timezone
+from background_task import background
 
 my_headers = ''
 
@@ -755,7 +756,7 @@ def update_pvp_seasons():
                                             season_reward.save()
                                             season.rewards.add(season_reward)
 
-#@background(schedule=7200)
+@background(schedule=3600)
 def get_entries():
 
     regions = Region.objects.all()
