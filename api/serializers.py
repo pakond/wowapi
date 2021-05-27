@@ -196,7 +196,6 @@ class ConduitSerializer(serializers.ModelSerializer):
 
 class CharacterConduitSerializer(serializers.ModelSerializer):
 
-    # conduit = ConduitSerializer(read_only=True)
     cid = serializers.ReadOnlyField(source='conduit.cid')
 
     class Meta:

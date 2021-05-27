@@ -358,23 +358,20 @@ class CharacterViewSet(viewsets.ModelViewSet):
 class PvpEntry2v2ViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntry2v2Serializer
     permission_classes = []
-    queryset = PvpEntry2v2.objects.all()
+    queryset = PvpEntry2v2.objects.select_related("character", "season", "region", "character__region", 
+    "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['character__name', 'time']
     filterset_fields = ['rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
     'character__faction__name', 'character__realm__slug']
     ordering_fields = ['rank', 'rating', 'season__sid']
     pagination_class = StandardResultsSetPagination
-
-    @method_decorator(cache_page(60*60*2))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
 
 class PvpEntry3v3ViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntry3v3Serializer
     permission_classes = []
-    queryset = PvpEntry3v3.objects.all()
+    queryset = PvpEntry3v3.objects.select_related("character", "season", "region", "character__region", 
+    "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['character__name', 'time']
     filterset_fields = ['rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
@@ -382,26 +379,17 @@ class PvpEntry3v3ViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['rank', 'rating', 'season__sid']
     pagination_class = StandardResultsSetPagination
 
-    @method_decorator(cache_page(60*60*2))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-
 class PvpEntryRbgViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntryRbgSerializer
     permission_classes = []
-    queryset = PvpEntryRbg.objects.all()
+    queryset = PvpEntryRbg.objects.select_related("character", "season", "region", "character__region", 
+    "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['time']
     filterset_fields = ['rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
     'character__faction__name', 'character__realm__slug']
     ordering_fields = ['rank', 'rating', 'season__sid']
     pagination_class = StandardResultsSetPagination
-
-    @method_decorator(cache_page(60*60*2))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
 
 class PvpSeasonViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpSeasonSerializer
