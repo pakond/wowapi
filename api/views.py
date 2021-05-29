@@ -296,7 +296,7 @@ class CharacterViewSet(viewsets.ModelViewSet):
     lookup_field = 'name'
     serializer_class = serializers.CharacterSerializer
     permission_classes = [HasAPIKey]
-    queryset = Character.objects.all()
+    queryset = Character.objects.select_related('region', 'realm', 'wow_class', 'faction', 'spec', 'race')
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['name']
     filterset_fields = ['region', 'realm', 'faction', 'race', 'wow_class', 'spec', 'achievements_completed', 'covenant', 'soulbind']
@@ -385,7 +385,7 @@ class PvpEntryRbgViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PvpEntryRbg.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    search_fields = ['time']
+    search_fields = ['time', 'character__name']
     filterset_fields = ['rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
     'character__faction__name', 'character__realm__slug']
     ordering_fields = ['rank', 'rating', 'season__sid']

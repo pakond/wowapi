@@ -29,7 +29,7 @@ class RealmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realm
-        fields = ['id', 'slug', 'region']
+        fields = ['id', 'slug', 'region', 'icon', 'category']
 
 class FactionSerializer(serializers.ModelSerializer):
 
@@ -77,7 +77,7 @@ class SpecSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Spec
-        fields = ['id', 'name', 'icon']
+        fields = ['id', 'name', 'icon', 'wow_class']
 
 class TalentSerializer(serializers.ModelSerializer):
 
@@ -265,6 +265,7 @@ class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
         fields = ['name', 'realm', 'region', 'faction', 'wow_class', 'guild', 'spec', 'race', 'gender', 'max_3v3_rating', 'max_2v2_rating']
+
 
 class CharacterDetailSerializer(serializers.ModelSerializer):
 

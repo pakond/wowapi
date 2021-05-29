@@ -260,6 +260,11 @@ class Character(models.Model):
     last_search = models.DateTimeField(default=timezone.now)
     checked = models.IntegerField(default=1)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+        ]
+
     def __str__(self):
         return self.name + '-' + self.realm.name
 
@@ -274,6 +279,11 @@ class PvpEntry2v2(models.Model):
     played = models.IntegerField(null=False)
     winratio = models.IntegerField(null=False)
     time = models.DateTimeField(null=False, default=timezone.now)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['character', 'time']),
+        ]
 
     def __str__(self):
         return self.character.name + ' ' + str(self.rating)
@@ -290,6 +300,11 @@ class PvpEntry3v3(models.Model):
     winratio = models.IntegerField(null=False)
     time = models.DateTimeField(null=False, default=timezone.now)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['character', 'time']),
+        ]
+
     def __str__(self):
         return self.character.name + ' ' + str(self.rating)
 
@@ -304,6 +319,11 @@ class PvpEntryRbg(models.Model):
     played = models.IntegerField(null=False)
     winratio = models.IntegerField(null=False)
     time = models.DateTimeField(null=False, default=timezone.now)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['character', 'time']),
+        ]
 
     def __str__(self):
         return self.character.name + ' ' + str(self.rating)
