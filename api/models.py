@@ -328,3 +328,63 @@ class PvpEntryRbg(models.Model):
     def __str__(self):
         return self.character.name + ' ' + str(self.rating)
 
+class PvpEntry2v2Historical(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
+    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
+    rank = models.IntegerField(null=False)
+    rating = models.IntegerField(null=False)
+    won = models.IntegerField(null=False)
+    lost = models.IntegerField(null=False)
+    played = models.IntegerField(null=False)
+    winratio = models.IntegerField(null=False)
+    time = models.DateTimeField(null=False, default=timezone.now)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['character', 'time']),
+        ]
+
+    def __str__(self):
+        return self.character.name + ' ' + str(self.rating)
+
+class PvpEntry3v3Historical(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
+    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
+    rank = models.IntegerField(null=False)
+    rating = models.IntegerField(null=False)
+    won = models.IntegerField(null=False)
+    lost = models.IntegerField(null=False)
+    played = models.IntegerField(null=False)
+    winratio = models.IntegerField(null=False)
+    time = models.DateTimeField(null=False, default=timezone.now)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['character', 'time']),
+        ]
+
+    def __str__(self):
+        return self.character.name + ' ' + str(self.rating)
+
+class PvpEntryRbgHistorical(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=False)
+    season = models.ForeignKey(PvpSeason, on_delete=models.CASCADE, null=False)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
+    rank = models.IntegerField(null=False)
+    rating = models.IntegerField(null=False)
+    won = models.IntegerField(null=False)
+    lost = models.IntegerField(null=False)
+    played = models.IntegerField(null=False)
+    winratio = models.IntegerField(null=False)
+    time = models.DateTimeField(null=False, default=timezone.now)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['character', 'time']),
+        ]
+
+    def __str__(self):
+        return self.character.name + ' ' + str(self.rating)
+

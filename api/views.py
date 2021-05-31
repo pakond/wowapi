@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from api.models import PvpSeason, PvpSeasonReward, PvpBracket, Language, Region, Realm, Faction, Race, WowClass, Spec, Talent, PvpTalent, Covenant
-from api.models import PvpEntry2v2, PvpEntry3v3, PvpEntryRbg, Soulbind, SoulbindTrait, Conduit, PvpBracketStatistics, CharacterConduit, Character, Achievement, CharacterAchievement
+from api.models import PvpSeason, PvpSeasonReward, PvpBracket, Language, Region, Realm, Faction, Race, WowClass, Spec, Talent, PvpTalent, Covenant, PvpEntry2v2Historical, PvpEntry3v3Historical
+from api.models import PvpEntry2v2, PvpEntry3v3, PvpEntryRbg, Soulbind, SoulbindTrait, Conduit, PvpBracketStatistics, CharacterConduit, Character, Achievement, CharacterAchievement, PvpEntryRbgHistorical
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework import viewsets, status, filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -24,62 +24,84 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
-class PvpEntry2v2Filter(FilterSet):
+class PvpEntry2v2HistoricalFilter(FilterSet):
 
-    character__wow_class__name = django_filters.filters.ModelMultipleChoiceFilter(
-        field_name='character__wow_class__name',
-        to_field_name='name',
-        queryset=WowClass.objects.all(),
-    )
-
-    character__spec__name = django_filters.filters.ModelMultipleChoiceFilter(
-        field_name='character__spec__name',
-        to_field_name='name',
+    character__spec__id = django_filters.filters.ModelMultipleChoiceFilter(
+        field_name='character__spec__id',
+        to_field_name='id',
         queryset=Spec.objects.all(),
     )
 
     class Meta:
         model = PvpEntry2v2
-        fields = ('rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
-    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__name')
+        fields = ('rank', 'rating', 'season__sid', 'region__name',
+    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
 
-class PvpEntry3v3Filter(FilterSet):
+class PvpEntry3v3HistoricalFilter(FilterSet):
 
-    character__wow_class__name = django_filters.filters.ModelMultipleChoiceFilter(
-        field_name='character__wow_class__name',
-        to_field_name='name',
-        queryset=WowClass.objects.all(),
-    )
-
-    character__spec__name = django_filters.filters.ModelMultipleChoiceFilter(
-        field_name='character__spec__name',
-        to_field_name='name',
+    character__spec__id = django_filters.filters.ModelMultipleChoiceFilter(
+        field_name='character__spec__id',
+        to_field_name='id',
         queryset=Spec.objects.all(),
     )
 
     class Meta:
         model = PvpEntry3v3
-        fields = ('rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
-    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__name')
+        fields = ('rank', 'rating', 'season__sid', 'region__name',
+    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
 
-class PvpEntryRbgFilter(FilterSet):
+class PvpEntryRbgHistoricalFilter(FilterSet):
 
-    character__wow_class__name = django_filters.filters.ModelMultipleChoiceFilter(
-        field_name='character__wow_class__name',
-        to_field_name='name',
-        queryset=WowClass.objects.all(),
-    )
-
-    character__spec__name = django_filters.filters.ModelMultipleChoiceFilter(
-        field_name='character__spec__name',
-        to_field_name='name',
+    character__spec__id = django_filters.filters.ModelMultipleChoiceFilter(
+        field_name='character__spec__id',
+        to_field_name='id',
         queryset=Spec.objects.all(),
     )
 
     class Meta:
         model = PvpEntryRbg
-        fields = ('rank', 'rating', 'season__sid', 'region__name', 'character__wow_class__name',
-    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__name')
+        fields = ('rank', 'rating', 'season__sid', 'region__name',
+    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
+
+
+class PvpEntry2v2Filter(FilterSet):
+
+    character__spec__id = django_filters.filters.ModelMultipleChoiceFilter(
+        field_name='character__spec__id',
+        to_field_name='id',
+        queryset=Spec.objects.all(),
+    )
+
+    class Meta:
+        model = PvpEntry2v2
+        fields = ('rank', 'rating', 'season__sid', 'region__name',
+    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
+
+class PvpEntry3v3Filter(FilterSet):
+
+    character__spec__id = django_filters.filters.ModelMultipleChoiceFilter(
+        field_name='character__spec__id',
+        to_field_name='id',
+        queryset=Spec.objects.all(),
+    )
+
+    class Meta:
+        model = PvpEntry3v3
+        fields = ('rank', 'rating', 'season__sid', 'region__name',
+    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
+
+class PvpEntryRbgFilter(FilterSet):
+
+    character__spec__id = django_filters.filters.ModelMultipleChoiceFilter(
+        field_name='character__spec__id',
+        to_field_name='id',
+        queryset=Spec.objects.all(),
+    )
+
+    class Meta:
+        model = PvpEntryRbg
+        fields = ('rank', 'rating', 'season__sid', 'region__name',
+    'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
 
 # Create your views here.
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
@@ -438,12 +460,45 @@ class PvpEntry3v3ViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntryRbgViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntryRbgSerializer
-    permission_classes = []
+    permission_classes = [HasAPIKey]
     queryset = PvpEntryRbg.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['time', 'character__name']
     filter_class = PvpEntryRbgFilter
+    ordering_fields = ['rank', 'rating', 'season__sid']
+    pagination_class = StandardResultsSetPagination
+
+class PvpEntry2v2HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.PvpEntry2v2HistoricalSerializer
+    permission_classes = [HasAPIKey]
+    queryset = PvpEntry2v2Historical.objects.select_related("character", "season", "region", "character__region", 
+    "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['character__name', 'time']
+    filter_class = PvpEntry2v2HistoricalFilter
+    ordering_fields = ['rank', 'rating', 'season__sid']
+    pagination_class = StandardResultsSetPagination
+
+class PvpEntry3v3HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.PvpEntry3v3HistoricalSerializer
+    permission_classes = [HasAPIKey]
+    queryset = PvpEntry3v3Historical.objects.select_related("character", "season", "region", "character__region", 
+    "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['character__name', 'time']
+    filter_class = PvpEntry3v3HistoricalFilter
+    ordering_fields = ['rank', 'rating', 'season__sid']
+    pagination_class = StandardResultsSetPagination
+
+class PvpEntryRbgHistoricalViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.PvpEntryRbgHistoricalSerializer
+    permission_classes = [HasAPIKey]
+    queryset = PvpEntryRbgHistorical.objects.select_related("character", "season", "region", "character__region", 
+    "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['time', 'character__name']
+    filter_class = PvpEntryRbgHistoricalFilter
     ordering_fields = ['rank', 'rating', 'season__sid']
     pagination_class = StandardResultsSetPagination
 
@@ -462,3 +517,5 @@ class PvpSeasonViewSet(viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return serializers.PvpSeasonDetailSerializer
         return serializers.PvpSeasonSerializer
+
+

@@ -25,6 +25,9 @@ router.register(r'character', views.CharacterViewSet, basename="character")
 router.register(r'pvp-entry-2v2', views.PvpEntry2v2ViewSet, basename="pvp-entry-2v2")
 router.register(r'pvp-entry-3v3', views.PvpEntry3v3ViewSet, basename="pvp-entry-3v3")
 router.register(r'pvp-entry-rbg', views.PvpEntryRbgViewSet, basename="pvp-entry-rbg")
+router.register(r'pvp-entry-2v2-archives', views.PvpEntry2v2HistoricalViewSet, basename="pvp-entry-2v2-archives")
+router.register(r'pvp-entry-3v3-archives', views.PvpEntry3v3HistoricalViewSet, basename="pvp-entry-3v3-archives")
+router.register(r'pvp-entry-rbg-archives', views.PvpEntryRbgHistoricalViewSet, basename="pvp-entry-Rbg-archives")
 router.register(r'pvp-season', views.PvpSeasonViewSet, basename="pvp-season")
 
 urlpatterns = [

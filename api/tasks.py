@@ -12,4 +12,5 @@ from . import wowpvp
 # wowpvp.update_soulbinds_traits()
 # wowpvp.update_conduit()
 # wowpvp.update_pvp_seasons()
-wowpvp.get_entries()
+wowpvp.get_archives()
+#wowpvp.get_entries()
