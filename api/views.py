@@ -33,7 +33,7 @@ class PvpEntry2v2HistoricalFilter(FilterSet):
     )
 
     class Meta:
-        model = PvpEntry2v2
+        model = PvpEntry2v2Historical
         fields = ('rank', 'rating', 'season__sid', 'region__name',
     'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
 
@@ -46,7 +46,7 @@ class PvpEntry3v3HistoricalFilter(FilterSet):
     )
 
     class Meta:
-        model = PvpEntry3v3
+        model = PvpEntry3v3Historical
         fields = ('rank', 'rating', 'season__sid', 'region__name',
     'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
 
@@ -59,7 +59,7 @@ class PvpEntryRbgHistoricalFilter(FilterSet):
     )
 
     class Meta:
-        model = PvpEntryRbg
+        model = PvpEntryRbgHistorical
         fields = ('rank', 'rating', 'season__sid', 'region__name',
     'character__faction__name', 'character__realm__slug', 'character__realm__category', 'character__spec__id')
 
@@ -471,7 +471,7 @@ class PvpEntryRbgViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntry2v2HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntry2v2HistoricalSerializer
-    permission_classes = [HasAPIKey]
+    permission_classes = []
     queryset = PvpEntry2v2Historical.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
@@ -482,7 +482,7 @@ class PvpEntry2v2HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntry3v3HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntry3v3HistoricalSerializer
-    permission_classes = [HasAPIKey]
+    permission_classes = []
     queryset = PvpEntry3v3Historical.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
@@ -493,7 +493,7 @@ class PvpEntry3v3HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntryRbgHistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntryRbgHistoricalSerializer
-    permission_classes = [HasAPIKey]
+    permission_classes = []
     queryset = PvpEntryRbgHistorical.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
@@ -503,8 +503,9 @@ class PvpEntryRbgHistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = StandardResultsSetPagination
 
 class PvpSeasonViewSet(viewsets.ReadOnlyModelViewSet):
+    lookup_field = 'sid'
     serializer_class = serializers.PvpSeasonSerializer
-    permission_classes = [HasAPIKey]
+    permission_classes = []
     queryset = PvpSeason.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['sid','is_active', 'season_start_timestamp', 'season_end_timestamp']

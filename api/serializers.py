@@ -247,7 +247,7 @@ class PvpSeasonSerializer(serializers.ModelSerializer):
 
 class PvpSeasonDetailSerializer(serializers.ModelSerializer):
 
-    rewards = PvpSeasonRewardSerializer(read_only=True)
+    rewards = PvpSeasonRewardDetailSerializer(read_only=True, many=True)
     
     class Meta:
         model = PvpSeason
