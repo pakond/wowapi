@@ -1,3 +1,4 @@
+from django.db.models.fields import CharField
 from django.shortcuts import render
 from api.models import PvpSeason, PvpSeasonReward, PvpBracket, Language, Region, Realm, Faction, Race, WowClass, Spec, Talent, PvpTalent, Covenant, PvpEntry2v2Historical, PvpEntry3v3Historical
 from api.models import PvpEntry2v2, PvpEntry3v3, PvpEntryRbg, Soulbind, SoulbindTrait, Conduit, PvpBracketStatistics, CharacterConduit, Character, Achievement, CharacterAchievement, PvpEntryRbgHistorical
@@ -18,6 +19,7 @@ from django.views.decorators.cache import cache_page
 import django_filters
 from django_filters import FilterSet
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import views
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 100
@@ -471,7 +473,7 @@ class PvpEntryRbgViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntry2v2HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntry2v2HistoricalSerializer
-    permission_classes = []
+    permission_classes = [HasAPIKey]
     queryset = PvpEntry2v2Historical.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
@@ -482,7 +484,7 @@ class PvpEntry2v2HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntry3v3HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntry3v3HistoricalSerializer
-    permission_classes = []
+    permission_classes = [HasAPIKey]
     queryset = PvpEntry3v3Historical.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
@@ -493,7 +495,7 @@ class PvpEntry3v3HistoricalViewSet(viewsets.ReadOnlyModelViewSet):
 
 class PvpEntryRbgHistoricalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.PvpEntryRbgHistoricalSerializer
-    permission_classes = []
+    permission_classes = [HasAPIKey]
     queryset = PvpEntryRbgHistorical.objects.select_related("character", "season", "region", "character__region", 
     "character__realm", "character__wow_class", "character__faction", "character__spec", "character__race")
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
@@ -505,7 +507,7 @@ class PvpEntryRbgHistoricalViewSet(viewsets.ReadOnlyModelViewSet):
 class PvpSeasonViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'sid'
     serializer_class = serializers.PvpSeasonSerializer
-    permission_classes = []
+    permission_classes = [HasAPIKey]
     queryset = PvpSeason.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['sid','is_active', 'season_start_timestamp', 'season_end_timestamp']
@@ -518,5 +520,105 @@ class PvpSeasonViewSet(viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return serializers.PvpSeasonDetailSerializer
         return serializers.PvpSeasonSerializer
+
+class Charts2v2ViewSet(views.APIView):
+
+    permission_classes = [HasAPIKey]
+
+    @method_decorator(cache_page(60*60))
+    def get(self, request):
+
+        yourdata = [{ 
+            'races': {},
+            'clases': {},
+            'specs': {},
+            'realms': {}
+        }]
+
+        races = Race.objects.all()
+        for race in races:
+            yourdata[0]['races'][race.name] = len(PvpEntry2v2.objects.filter(character__race=race))
+            
+        clases = WowClass.objects.all()
+        for wow_class in clases:
+            yourdata[0]['clases'][wow_class.name] = len(PvpEntry2v2.objects.filter(character__wow_class=wow_class))
+            specs = Spec.objects.filter(wow_class=wow_class)
+            for spec in specs:
+                yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntry2v2.objects.filter(character__spec=spec, character__wow_class=wow_class))
+
+        realms = Realm.objects.all()
+        for realm in realms:
+            realm_pop = len(PvpEntry2v2.objects.filter(character__realm=realm))
+            if realm_pop > 10:
+                yourdata[0]['realms'][realm.slug] = realm_pop
+
+        return Response(yourdata)
+
+class Charts3v3ViewSet(views.APIView):
+
+    permission_classes = [HasAPIKey]
+
+    @method_decorator(cache_page(60*60))
+    def get(self, request):
+
+        yourdata = [{ 
+            'races': {},
+            'clases': {},
+            'specs': {},
+            'realms': {}
+        }]
+
+        races = Race.objects.all()
+        for race in races:
+            yourdata[0]['races'][race.name] = len(PvpEntry3v3.objects.filter(character__race=race))
+            
+        clases = WowClass.objects.all()
+        for wow_class in clases:
+            yourdata[0]['clases'][wow_class.name] = len(PvpEntry3v3.objects.filter(character__wow_class=wow_class))
+            specs = Spec.objects.filter(wow_class=wow_class)
+            for spec in specs:
+                yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntry3v3.objects.filter(character__spec=spec, character__wow_class=wow_class))
+
+        realms = Realm.objects.all()
+        for realm in realms:
+            realm_pop = len(PvpEntry3v3.objects.filter(character__realm=realm))
+            if realm_pop > 10:
+                yourdata[0]['realms'][realm.slug] = realm_pop
+
+        return Response(yourdata)
+
+class ChartsRbgViewSet(views.APIView):
+
+    permission_classes = [HasAPIKey]
+
+    @method_decorator(cache_page(60*60))
+    def get(self, request):
+
+        yourdata = [{ 
+            'races': {},
+            'clases': {},
+            'specs': {},
+            'realms': {}
+        }]
+
+        races = Race.objects.all()
+        for race in races:
+            yourdata[0]['races'][race.name] = len(PvpEntryRbg.objects.filter(character__race=race))
+            
+        clases = WowClass.objects.all()
+        for wow_class in clases:
+            yourdata[0]['clases'][wow_class.name] = len(PvpEntryRbg.objects.filter(character__wow_class=wow_class))
+            specs = Spec.objects.filter(wow_class=wow_class)
+            for spec in specs:
+                yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntryRbg.objects.filter(character__spec=spec, character__wow_class=wow_class))
+
+        realms = Realm.objects.all()
+        for realm in realms:
+            realm_pop = len(PvpEntryRbg.objects.filter(character__realm=realm))
+            if realm_pop > 10:
+                yourdata[0]['realms'][realm.slug] = realm_pop
+
+        return Response(yourdata)
+
 
 

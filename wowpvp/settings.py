@@ -212,8 +212,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 SITE_URL = 'http://localhost:8080'
-MEDIA_URL = 'http://212.71.245.14/'
-API_URL = 'http://212.71.245.14/'
+MEDIA_URL = 'http://172.105.85.125/'
+API_URL = 'http://172.105.85.125/'
 SITE_NAME = 'MurlocMate'
 SITE_FULL_NAME = 'MurlocMate'
 BACKGROUND_TASK_RUN_ASYNC = 'true'

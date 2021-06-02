@@ -31,6 +31,9 @@ router.register(r'pvp-entry-rbg-archives', views.PvpEntryRbgHistoricalViewSet, b
 router.register(r'pvp-season', views.PvpSeasonViewSet, basename="pvp-season")
 
 urlpatterns = [
+    url('charts-2v2', views.Charts2v2ViewSet.as_view(), name='charts-2v2'),
+    url('charts-3v3', views.Charts3v3ViewSet.as_view(), name='charts-3v3'),
+    url('charts-rbg', views.ChartsRbgViewSet.as_view(), name='charts-rbg'),
     path('character/<str:region>/<slug:realm>/<str:name>/', views.CharacterViewSet.as_view({'get': 'retrieve'}), name='character-detail'),
     url(r'^', include(router.urls)),
 ]
