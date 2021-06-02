@@ -532,7 +532,8 @@ class Charts2v2ViewSet(views.APIView):
             'races': {},
             'clases': {},
             'specs': {},
-            'realms': {}
+            'realms': {},
+            'total_entries': len(PvpEntry2v2.objects.all())
         }]
 
         races = Race.objects.all()
@@ -547,11 +548,11 @@ class Charts2v2ViewSet(views.APIView):
                 yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntry2v2.objects.filter(character__spec=spec, character__wow_class=wow_class))
 
         realms = Realm.objects.all()
-        yourdata[0]['realms']['total'] = len(realms)
         for realm in realms:
-            realm_pop = len(PvpEntry2v2.objects.filter(character__realm=realm))
-            if realm_pop > 10:
-                yourdata[0]['realms'][realm.slug] = realm_pop
+            realm_pop_horde = len(PvpEntry2v2.objects.filter(character__realm=realm, character__faction__name='Horde'))
+            realm_pop_alliance = len(PvpEntry2v2.objects.filter(character__realm=realm, character__faction__name='Alliance'))
+            if realm_pop_horde + realm_pop_alliance > 10:
+                yourdata[0]['realms'][realm.slug] = { 'Horde': realm_pop_horde, 'Alliance': realm_pop_alliance }
 
         return Response(yourdata)
 
@@ -566,7 +567,8 @@ class Charts3v3ViewSet(views.APIView):
             'races': {},
             'clases': {},
             'specs': {},
-            'realms': {}
+            'realms': {},
+            'total_entries': len(PvpEntry2v2.objects.all())
         }]
 
         races = Race.objects.all()
@@ -581,11 +583,11 @@ class Charts3v3ViewSet(views.APIView):
                 yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntry3v3.objects.filter(character__spec=spec, character__wow_class=wow_class))
 
         realms = Realm.objects.all()
-        yourdata[0]['realms']['total'] = len(realms)
         for realm in realms:
-            realm_pop = len(PvpEntry3v3.objects.filter(character__realm=realm))
-            if realm_pop > 10:
-                yourdata[0]['realms'][realm.slug] = realm_pop
+            realm_pop_horde = len(PvpEntry3v3.objects.filter(character__realm=realm, character__faction__name='Horde'))
+            realm_pop_alliance = len(PvpEntry3v3.objects.filter(character__realm=realm, character__faction__name='Alliance'))
+            if realm_pop_horde + realm_pop_alliance > 10:
+                yourdata[0]['realms'][realm.slug] = { 'Horde': realm_pop_horde, 'Alliance': realm_pop_alliance }
 
         return Response(yourdata)
 
@@ -600,7 +602,8 @@ class ChartsRbgViewSet(views.APIView):
             'races': {},
             'clases': {},
             'specs': {},
-            'realms': {}
+            'realms': {},
+            'total_entries': len(PvpEntry2v2.objects.all())
         }]
 
         races = Race.objects.all()
@@ -615,11 +618,11 @@ class ChartsRbgViewSet(views.APIView):
                 yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntryRbg.objects.filter(character__spec=spec, character__wow_class=wow_class))
 
         realms = Realm.objects.all()
-        yourdata[0]['realms']['total'] = len(realms)
         for realm in realms:
-            realm_pop = len(PvpEntryRbg.objects.filter(character__realm=realm))
-            if realm_pop > 10:
-                yourdata[0]['realms'][realm.slug] = realm_pop
+            realm_pop_horde = len(PvpEntryRbg.objects.filter(character__realm=realm, character__faction__name='Horde'))
+            realm_pop_alliance = len(PvpEntryRbg.objects.filter(character__realm=realm, character__faction__name='Alliance'))
+            if realm_pop_horde + realm_pop_alliance > 10:
+                yourdata[0]['realms'][realm.slug] = { 'Horde': realm_pop_horde, 'Alliance': realm_pop_alliance }
 
         return Response(yourdata)
 
