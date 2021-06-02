@@ -547,6 +547,7 @@ class Charts2v2ViewSet(views.APIView):
                 yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntry2v2.objects.filter(character__spec=spec, character__wow_class=wow_class))
 
         realms = Realm.objects.all()
+        yourdata[0]['realms']['total'] = len(realms)
         for realm in realms:
             realm_pop = len(PvpEntry2v2.objects.filter(character__realm=realm))
             if realm_pop > 10:
@@ -580,6 +581,7 @@ class Charts3v3ViewSet(views.APIView):
                 yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntry3v3.objects.filter(character__spec=spec, character__wow_class=wow_class))
 
         realms = Realm.objects.all()
+        yourdata[0]['realms']['total'] = len(realms)
         for realm in realms:
             realm_pop = len(PvpEntry3v3.objects.filter(character__realm=realm))
             if realm_pop > 10:
@@ -613,6 +615,7 @@ class ChartsRbgViewSet(views.APIView):
                 yourdata[0]['specs'][spec.name + '-' + wow_class.name] = len(PvpEntryRbg.objects.filter(character__spec=spec, character__wow_class=wow_class))
 
         realms = Realm.objects.all()
+        yourdata[0]['realms']['total'] = len(realms)
         for realm in realms:
             realm_pop = len(PvpEntryRbg.objects.filter(character__realm=realm))
             if realm_pop > 10:

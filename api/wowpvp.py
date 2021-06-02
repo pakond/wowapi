@@ -757,7 +757,7 @@ def update_pvp_seasons():
                                             season_reward.save()
                                             season.rewards.add(season_reward)
 
-#@background(schedule=1800)
+@background(schedule=1800)
 def get_cutoffs():
     
     regions = Region.objects.all()
@@ -786,7 +786,7 @@ def get_cutoffs():
                     season.rewards.add(season_reward)
 
 
-#@background(schedule=7200)
+@background(schedule=7200)
 def get_entries():
 
     print('ejecutando get_entries ' + str(timezone.now()))
