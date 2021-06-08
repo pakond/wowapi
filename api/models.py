@@ -5,7 +5,7 @@ from django.utils import timezone
 # Create your models here.
 
 class Language(models.Model):
-    name = models.CharField(max_length=264, null=False)
+    name = models.CharField(max_length=264, null=False, unique=True)
     code = models.CharField(max_length=128, null=False)
     icon = models.ImageField(upload_to = 'static/img/language', null=False)
 
@@ -13,7 +13,7 @@ class Language(models.Model):
         return self.name
 
 class Region(models.Model):
-    name = models.CharField(max_length=128, null=False)
+    name = models.CharField(max_length=128, null=False, unique=True)
     icon = models.ImageField(upload_to = 'static/img/region', null=False)
 
     def __str__(self):
@@ -22,7 +22,7 @@ class Region(models.Model):
 class Realm(models.Model):
     name = models.CharField(max_length=264, null=False)
     slug = models.CharField(max_length=264, null=False)
-    rid = models.IntegerField(null=False)
+    rid = models.IntegerField(null=False, unique=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, null=False)
     category = models.CharField(max_length=264, null=False)
     locale = models.CharField(max_length=128, null=False)
@@ -34,17 +34,15 @@ class Realm(models.Model):
         return self.name
 
 class Faction(models.Model):
-    name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
+    name = models.CharField(max_length=264, null=False, unique=True)
     icon = models.ImageField(upload_to = 'static/img/faction', null=False)
 
     def __str__(self):
         return self.name
 
 class WowClass(models.Model):
-    name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
-    cid = models.IntegerField(null=False)
+    name = models.CharField(max_length=264, null=False, unique=True)
+    cid = models.IntegerField(null=False, unique=True)
     icon = models.ImageField(upload_to = 'static/img/class', null=False)
     power_type = models.CharField(max_length=264, null=False)
     color = models.CharField(max_length=20, null=True)
@@ -54,8 +52,7 @@ class WowClass(models.Model):
 
 class Race(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
-    rid = models.IntegerField(null=False)
+    rid = models.IntegerField(null=False, unique=True)
     faction = models.ForeignKey(Faction, on_delete=models.CASCADE, null=False)
     is_allied_race = models.BooleanField(null=False)
     wow_clases = models.ManyToManyField(WowClass)
@@ -67,10 +64,8 @@ class Race(models.Model):
 
 class Spec(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)
-    sid = models.IntegerField(null=False)
+    sid = models.IntegerField(null=False, unique=True)
     wow_class = models.ForeignKey(WowClass, on_delete=models.CASCADE, null=False)
     icon = models.ImageField(upload_to = 'static/img/spec', null=False)
     role = models.CharField(max_length=264, null=False)
@@ -82,11 +77,9 @@ class Spec(models.Model):
 
 class Talent(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)
     spell_id = models.IntegerField(null=False)
-    talent_id = models.IntegerField(null=False)
+    talent_id = models.IntegerField(null=False, unique=True)
     wow_class = models.ForeignKey(WowClass, on_delete=models.CASCADE, null=False)
     spec = models.ManyToManyField(Spec)
     icon = models.ImageField(upload_to = 'static/img/talent', null=False)
@@ -99,11 +92,9 @@ class Talent(models.Model):
 
 class PvpTalent(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)
     spell_id = models.IntegerField(null=False)
-    talent_id = models.IntegerField(null=False)
+    talent_id = models.IntegerField(null=False, unique=True)
     wow_class = models.ForeignKey(WowClass, on_delete=models.CASCADE, null=False)
     spec = models.ForeignKey(Spec, on_delete=models.CASCADE, null=False)
     icon = models.ImageField(upload_to = 'static/img/pvp_talent', null=False)
@@ -114,10 +105,8 @@ class PvpTalent(models.Model):
 
 class Achievement(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
-    aid = models.IntegerField(null=False)
+    aid = models.IntegerField(null=False, unique=True)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)
     is_account_wide = models.BooleanField(null=False)
     points = models.IntegerField()
     icon = models.ImageField(upload_to = 'static/img/achievement', null=False)
@@ -133,11 +122,9 @@ class CharacterAchievement(models.Model):
         return self.achievement.name
 
 class Covenant(models.Model):
-    name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
+    name = models.CharField(max_length=264, null=False, unique=True)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)
-    cid = models.IntegerField(null=False)
+    cid = models.IntegerField(null=False, unique=True)
     icon = models.ImageField(upload_to = 'static/img/covenant', null=False)
 
     def __str__(self):
@@ -145,8 +132,7 @@ class Covenant(models.Model):
 
 class Soulbind(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
-    sid = models.IntegerField(null=False)
+    sid = models.IntegerField(null=False, unique=True)
     covenant = models.ForeignKey(Covenant, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
@@ -154,12 +140,10 @@ class Soulbind(models.Model):
 
 class SoulbindTrait(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
-    sid = models.IntegerField(null=False)
+    sid = models.IntegerField(null=False, unique=True)
     spell_id = models.IntegerField(null=False)
     soulbind = models.ForeignKey(Soulbind, on_delete=models.CASCADE, null=False)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)
     icon = models.ImageField(upload_to = 'static/img/soulbind_trait', null=False)
 
     def __str__(self):
@@ -167,8 +151,7 @@ class SoulbindTrait(models.Model):
 
 class Conduit(models.Model):
     name = models.CharField(max_length=264, null=False)
-    name_es = models.CharField(max_length=264, null=False)
-    cid = models.IntegerField(null=False)
+    cid = models.IntegerField(null=False, unique=True)
     ranks = JSONField(null=False)
     type = models.CharField(max_length=264, null=False)
     icon = models.ImageField(upload_to = 'static/img/conduit', null=False)
@@ -185,10 +168,9 @@ class CharacterConduit(models.Model):
         return self.conduit.name
 
 class PvpBracket(models.Model):
-    pvp_type = models.CharField(max_length=264, null=False)
-    bid = models.IntegerField(null=False)
+    pvp_type = models.CharField(max_length=264, null=False, unique=True)
+    bid = models.IntegerField(null=False, unique=True)
     description = models.CharField(max_length=5000, null=False)
-    description_es = models.CharField(max_length=5000, null=False)     
 
     def __str__(self):
         return self.pvp_type
@@ -204,7 +186,7 @@ class PvpSeasonReward(models.Model):
         return self.achievement.name
 
 class PvpSeason(models.Model):
-    sid = models.IntegerField(null=False)
+    sid = models.IntegerField(null=False, unique=True)
     season_start_timestamp = models.DateTimeField(null=False)
     season_end_timestamp = models.DateTimeField(null=True, default=None, blank=True)
     rewards = models.ManyToManyField(PvpSeasonReward, blank=True, default=None)

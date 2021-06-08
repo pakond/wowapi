@@ -152,7 +152,7 @@ class FactionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Faction.objects.all()
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
 
     @method_decorator(cache_page(60*60*24*90))
     def dispatch(self, request, *args, **kwargs):
@@ -163,7 +163,7 @@ class RaceViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Race.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['faction', 'is_allied_race']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -180,7 +180,7 @@ class WowClassViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = WowClass.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['power_type']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -197,7 +197,7 @@ class SpecViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Spec.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['wow_class', 'role']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -214,7 +214,7 @@ class TalentViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Talent.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['spell_id', 'talent_id', 'wow_class', 'spec', 'tier_index', 'column_index', 'level']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -231,7 +231,7 @@ class PvpTalentViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = PvpTalent.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['spell_id', 'talent_id', 'wow_class', 'spec', 'level']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -248,7 +248,7 @@ class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Achievement.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['is_account_wide']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -281,7 +281,7 @@ class CovenantViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Covenant.objects.all()
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
 
     @method_decorator(cache_page(60*60*24*90))
     def dispatch(self, request, *args, **kwargs):
@@ -297,7 +297,7 @@ class SoulbindViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Soulbind.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['covenant']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -314,7 +314,7 @@ class SoulbindTraitViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = SoulbindTrait.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['soulbind']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -331,7 +331,7 @@ class ConduitViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [HasAPIKey]
     queryset = Conduit.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name', 'name_es']
+    search_fields = ['name']
     filterset_fields = ['type', 'wow_class']
 
     @method_decorator(cache_page(60*60*24*90))
@@ -568,7 +568,7 @@ class Charts3v3ViewSet(views.APIView):
             'clases': {},
             'specs': {},
             'realms': {},
-            'total_entries': len(PvpEntry2v2.objects.all())
+            'total_entries': len(PvpEntry3v3.objects.all())
         }]
 
         races = Race.objects.all()
@@ -603,7 +603,7 @@ class ChartsRbgViewSet(views.APIView):
             'clases': {},
             'specs': {},
             'realms': {},
-            'total_entries': len(PvpEntry2v2.objects.all())
+            'total_entries': len(PvpEntryRbg.objects.all())
         }]
 
         races = Race.objects.all()

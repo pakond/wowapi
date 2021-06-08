@@ -199,9 +199,7 @@ CORS_PREFLIGHT_MAX_AGE = 86400
 #CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://localhost:8100",
-    "http://localhost:8200",
+    "https://murlocmate.com",
     "http://localhost:4200"
 ]
 
@@ -211,13 +209,13 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-Api-Key',
 ]
 
-SITE_URL = 'http://localhost:8080'
-MEDIA_URL = 'http://172.105.85.125/'
-API_URL = 'http://172.105.85.125/'
+SITE_URL = 'https://murlocmate.com/'
+MEDIA_URL = 'https://api-eu.murlocmate.com/'
+API_URL = 'https://api-eu.murlocmate.com/'
 SITE_NAME = 'MurlocMate'
 SITE_FULL_NAME = 'MurlocMate'
 BACKGROUND_TASK_RUN_ASYNC = 'true'
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

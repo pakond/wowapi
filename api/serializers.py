@@ -36,7 +36,7 @@ class FactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Faction
-        fields = ['id', 'name', 'name_es', 'icon']
+        fields = ['id', 'name', 'icon']
 
 class WowClassSerializer(serializers.ModelSerializer):
 
@@ -48,7 +48,7 @@ class WowClassDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WowClass
-        fields = ['id', 'name', 'name_es', 'color', 'power_type', 'icon']
+        fields = ['id', 'name', 'color', 'power_type', 'icon']
 
 class RaceSerializer(serializers.ModelSerializer):
 
@@ -63,7 +63,7 @@ class RaceDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Race
-        fields = ['id', 'name', 'name_es', 'faction', 'wow_clases', 'is_allied_race', 'icon_male', 'icon_female']
+        fields = ['id', 'name', 'faction', 'wow_clases', 'is_allied_race', 'icon_male', 'icon_female']
 
 
 class SpecDetailSerializer(serializers.ModelSerializer):
@@ -72,7 +72,7 @@ class SpecDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Spec
-        fields = ['id', 'name', 'name_es', 'description', 'description_es', 'icon', 'wow_class', 'role', 'talents', 'pvp_talents']
+        fields = ['id', 'name', 'description', 'icon', 'wow_class', 'role', 'talents', 'pvp_talents']
 
 class SpecSerializer(serializers.ModelSerializer):
 
@@ -93,7 +93,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Talent
-        fields = ['id', 'name', 'name_es', 'description', 'description_es', 'spell_id', 'talent_id', 'wow_class', 'spec', 'tier_index', 'column_index', 'level', 'icon']
+        fields = ['id', 'name', 'description', 'spell_id', 'talent_id', 'wow_class', 'spec', 'tier_index', 'column_index', 'level', 'icon']
 
 
 class PvpTalentSerializer(serializers.ModelSerializer):
@@ -110,7 +110,7 @@ class PvpTalentDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PvpTalent
-        fields = ['id', 'name', 'name_es', 'description', 'description_es', 'spell_id', 'talent_id', 'wow_class', 'spec', 'level', 'icon']
+        fields = ['id', 'name', 'description', 'spell_id', 'talent_id', 'wow_class', 'spec', 'level', 'icon']
 
 class AchievementSerializer(serializers.ModelSerializer):
 
@@ -123,7 +123,7 @@ class AchievementDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Achievement
-        fields = ['id', 'name', 'aid', 'name_es', 'description', 'description_es', 'is_account_wide', 'points', 'icon']
+        fields = ['id', 'name', 'aid', 'description', 'is_account_wide', 'points', 'icon']
 
 class CharacterAchievementSerializer(serializers.ModelSerializer):
 
@@ -153,7 +153,7 @@ class CovenantDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Covenant
-        fields = ['id', 'name', 'name_es', 'description', 'description_es', 'icon']
+        fields = ['id', 'name', 'description', 'icon']
 
 class SoulbindSerializer(serializers.ModelSerializer):
 
@@ -167,7 +167,7 @@ class SoulbindDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Soulbind
-        fields = ['id', 'name', 'name_es', 'covenant']
+        fields = ['id', 'name', 'covenant']
 
 class SoulbindTraitDetailSerializer(serializers.ModelSerializer):
 
@@ -175,7 +175,7 @@ class SoulbindTraitDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SoulbindTrait
-        fields = ['id', 'name', 'sid', 'name_es', 'soulbind', 'description', 'description_es', 'spell_id', 'icon']
+        fields = ['id', 'name', 'sid', 'soulbind', 'description', 'spell_id', 'icon']
 
 class SoulbindTraitSerializer(serializers.ModelSerializer):
 
@@ -187,7 +187,7 @@ class ConduitDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conduit
-        fields = ['id', 'name', 'cid', 'name_es', 'ranks', 'type', 'icon']
+        fields = ['id', 'name', 'cid', 'ranks', 'type', 'icon']
 
 class ConduitSerializer(serializers.ModelSerializer):
 
@@ -213,7 +213,7 @@ class PvpBracketDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PvpBracket
-        fields = ['id', 'pvp_type', 'description', 'description_es']
+        fields = ['id', 'pvp_type', 'description']
 
 class PvpSeasonRewardSerializer(serializers.ModelSerializer):
 

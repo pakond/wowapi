@@ -25,16 +25,13 @@ def get_token():
 def make_request(url, query):
     if my_headers == '':
         get_token()
-    
-    response = requests.get(url, headers=my_headers, params=query)
 
-    return response
-
-    # if response.status_code == 200 or response.status_code == 404:
-    #     resjson = response.json()
-    #     return resjson
-    # else:
-    #     print(response.text + ' ' + url)
+    try:
+        response = requests.get(url, headers=my_headers, params=query)
+    except requests.exceptions.RequestException as error:
+        print(error)
+    finally: 
+        return response
 
 def update_realms():
     Realm.objects.all().delete()
@@ -145,8 +142,6 @@ def update_races():
                         obj = Faction.objects.get(name=single['faction']['name'])
                         race['faction'] = obj
                         race['is_allied_race'] = single['is_allied_race']
-                    if lang.name == 'Spanish':
-                        race['name_es'] = single['name']
                 else:
                     print('Error making request: https://eu.api.blizzard.com/data/wow/playable-race/' + str(item['id']))
                     print(response.text)
@@ -225,8 +220,6 @@ def update_classes():
                             class_data['name'] = single['name']
                             class_data['cid'] = single['id']
                             class_data['power_type'] = single['power_type']['name']
-                        if lang.name == 'Spanish':
-                            class_data['name_es'] = single['name']
                     else:
                         print('Error making request: https://eu.api.blizzard.com/data/wow/playable-class/' + str(item['id']))
                         print(response.text)
@@ -285,10 +278,6 @@ def update_specs():
                             spec_data['role'] = single['role']['name']
                             spec_data['talents'] = single['talent_tiers']
                             spec_data['pvp_talents'] = single['pvp_talents']
-                            
-                        if lang.name == 'Spanish':
-                            spec_data['name_es'] = single['name']
-                            spec_data['description_es'] = single['gender_description']['male']
                     else:
                         print('Error making request: https://eu.api.blizzard.com/data/wow/playable-specialization/' + str(item['id']))
                         print(response.text)
@@ -350,10 +339,6 @@ def update_talents():
                         else:
                             print('Error making request: https://eu.api.blizzard.com/data/wow/media/spell/' + str(single['spell']['id']))
                             print(responsemedia.text)
-
-                    if lang.name == 'Spanish':
-                        talent_data['name_es'] = single['spell']['name']
-                        talent_data['description_es'] = single['description']
                 else:
                     print('Error making request: https://eu.api.blizzard.com/data/wow/talent/' + str(item['id']))
                     print(response.text)
@@ -412,9 +397,6 @@ def update_pvp_talents():
                             pvp_talent_data['spec'] = objts
                             pvp_talent_data['description'] = single['description']
                             pvp_talent_data['level'] = single['unlock_player_level']
-                    if lang.name == 'Spanish':
-                        pvp_talent_data['name_es'] = single['spell']['name']
-                        pvp_talent_data['description_es'] = single['description']
 
             talent = PvpTalent(**pvp_talent_data)
             talent.save()
@@ -469,11 +451,6 @@ def update_achievements():
                         achieve_data['is_account_wide'] = single['is_account_wide']
                         achieve_data['aid'] = single['id']
                         achieve_data['points'] = single['points']
-                
-                if lang.name == 'Spanish':
-                    achieve_data['name_es'] = single['name']
-                    achieve_data['description_es'] = single['description'] 
-
         achievement = Achievement(**achieve_data)
         achievement.save()
 
@@ -503,11 +480,6 @@ def update_achievements():
                         achieve_data['is_account_wide'] = single['is_account_wide']
                         achieve_data['aid'] = single['id']
                         achieve_data['points'] = single['points']
-                
-                if lang.name == 'Spanish':
-                    achieve_data['name_es'] = single['name']
-                    achieve_data['description_es'] = single['description'] 
-
         achievement = Achievement(**achieve_data)
         achievement.save()
 
@@ -549,11 +521,6 @@ def update_covenant():
                             covenant_data['name'] = single['name']
                             covenant_data['description'] = single['description']
                             covenant_data['cid'] = single['id']
-
-                        if lang.name == 'Spanish':
-                            covenant_data['name_es'] = single['name']
-                            covenant_data['description_es'] = single['description']
-
             covenant = Covenant(**covenant_data)
             covenant.save()
 
@@ -584,10 +551,6 @@ def update_soulbinds():
                         soulbind_data['name'] = single['name']
                         soulbind_data['covenant'] = obj
                         soulbind_data['sid'] = item['id']
-                    
-                    if lang.name == 'Spanish':
-                        soulbind_data['name_es'] = single['name']
-
             soulbind = Soulbind(**soulbind_data)
             soulbind.save()
 
@@ -646,11 +609,11 @@ def update_soulbinds_traits():
                                 obj = Soulbind.objects.get(name=single['talent_tree']['name'])
                                 item_data['soulbind'] = obj
 
-                            if lang.name == 'Spanish':
-                                if single['talent_tree']['name'] == 'Mikanikos':
-                                    single['talent_tree']['name'] = 'Forjador supremo Mikanikos'
-                                item_data['name_es'] = single['name']
-                                item_data['description_es'] = single['spell_tooltip']['description']
+                            # if lang.name == 'Spanish':
+                            #     if single['talent_tree']['name'] == 'Mikanikos':
+                            #         single['talent_tree']['name'] = 'Forjador supremo Mikanikos'
+                            #     item_data['name_es'] = single['name']
+                            #     item_data['description_es'] = single['spell_tooltip']['description']
                 
             soulbind_trait = SoulbindTrait(**item_data)
             soulbind_trait.save()
@@ -694,10 +657,6 @@ def update_conduit():
                             conduit_data['cid'] = single['id']
                             conduit_data['ranks'] = single['ranks']
                             conduit_data['type'] = single['socket_type']['type']
-
-                        if lang.name == 'Spanish':
-                            conduit_data['name_es'] = single['name']
-
             conduit = Conduit(**conduit_data)
             conduit.save()
 
@@ -950,7 +909,7 @@ def get_archives():
 
 def get_character(name, region, realm):
 
-    #mytime = datetime.timestamp(datetime.now())
+    mytime = datetime.timestamp(datetime.now())
 
     character_data = {}
 
@@ -1000,9 +959,9 @@ def get_character(name, region, realm):
 
         get_alters(character)
 
-        # lasttime = datetime.timestamp(datetime.now())
-        # thetime = lasttime - mytime
-        # print('added ' + name + ' in: ' + str(thetime))
+        lasttime = datetime.timestamp(datetime.now())
+        thetime = lasttime - mytime
+        print('added ' + name + ' in: ' + str(thetime))
 
         return True
 
@@ -1080,29 +1039,30 @@ def get_logros(character, current_rbg_rating):
         character.achievements_completed.clear()
         character.achievements.clear()
         for achievement in responseachievements['achievements']:
-            if 'criteria' in achievement and achievement['criteria']['is_completed'] == True:
-                if 'completed_timestamp' in achievement:
-                    mytime = datetime.fromtimestamp(achievement['completed_timestamp'] / 1000)
-                    mytime = make_aware(mytime)
-                    for achieve in achs:
-                        if achieve.aid == achievement['id']:
-                            character.achievements_completed.add(achieve)
-                            objca = CharacterAchievement(achievement=achieve, date_completed=mytime)
-                            objca.save()
-                            character.achievements.add(objca)
-                            # maximo logro rbg
-                            if character.faction.name == 'Alliance':
-                                for numlogro in logros_rbg['alliance']:
-                                    if achieve.aid == numlogro:
-                                        hay_flow = 1
-                                        maximo_dutti = maximo_dutti + 100
-                                        break                   
-                            if character.faction.name == 'Horde':
-                                for numlogro in logros_rbg['horde']:
-                                    if achieve.aid == numlogro:
-                                        hay_flow = 1
-                                        maximo_dutti = maximo_dutti + 100
-                                        break
+            # CIRETIRA IS FUKED BY BLIZZARD
+            # if 'criteria' in achievement and achievement['criteria']['is_completed'] == True:
+            if 'completed_timestamp' in achievement:
+                mytime = datetime.fromtimestamp(achievement['completed_timestamp'] / 1000)
+                mytime = make_aware(mytime)
+                for achieve in achs:
+                    if achieve.aid == achievement['id']:
+                        character.achievements_completed.add(achieve)
+                        objca = CharacterAchievement(achievement=achieve, date_completed=mytime)
+                        objca.save()
+                        character.achievements.add(objca)
+                        # maximo logro rbg
+                        if character.faction.name == 'Alliance':
+                            for numlogro in logros_rbg['alliance']:
+                                if achieve.aid == numlogro:
+                                    hay_flow = 1
+                                    maximo_dutti = maximo_dutti + 100
+                                    break                   
+                        if character.faction.name == 'Horde':
+                            for numlogro in logros_rbg['horde']:
+                                if achieve.aid == numlogro:
+                                    hay_flow = 1
+                                    maximo_dutti = maximo_dutti + 100
+                                    break
 
         if hay_flow == 1:
             if current_rbg_rating > maximo_dutti:
@@ -1305,10 +1265,32 @@ def get_soulbinds_conduits(character):
                                         cconduit.save()
                                         character.conduits.add(cconduit)
 
+# def get_alters(character):
+
+#     region = character.region
+#     logros = character.achievements.filter(achievement__is_account_wide=True).order_by('-id')[:4]
+
+#     got_alters = False
+#     for logro in logros:
+#         if hasattr(logro, 'achievement'):
+#             characters = Character.objects.filter(
+#                 region=region,
+#                 achievements__achievement=logro.achievement,
+#                 achievements__date_completed=logro.date_completed
+#             ).exclude(id=character.id)
+
+#             for char in characters:
+#                 character.alters.add(char)
+#                 char.alters.add(character)
+#                 got_alters = True
+            
+#             if got_alters == True:
+#                 break
+
 def get_alters(character):
 
     region = character.region
-    logro = character.achievements.filter(achievement__is_account_wide=True).first()
+    logro = character.achievements.filter(achievement__is_account_wide=True).last()
 
     if hasattr(logro, 'achievement'):
         characters = Character.objects.filter(
@@ -1321,12 +1303,12 @@ def get_alters(character):
             character.alters.add(char)
             char.alters.add(character)
 
-    else:
-        characters = Character.objects.filter(
-            region=region,
-            achievement_points=character.achievement_points
-        ).exclude(id=character.id)
+#     else:
+#         characters = Character.objects.filter(
+#             region=region,
+#             achievement_points=character.achievement_points
+#         ).exclude(id=character.id)
 
-        for char in characters:
-            character.alters.add(char)
-            char.alters.add(character)
+#         for char in characters:
+#             character.alters.add(char)
+#             char.alters.add(character)
